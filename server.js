@@ -51,6 +51,5 @@ console.log("running");
 
 function writeToSerial(){
 	var output = hullCode + "," + panCode + "," + tiltCode + "\n" ;
-	console.log(output);
 	port.write(output);
 }
