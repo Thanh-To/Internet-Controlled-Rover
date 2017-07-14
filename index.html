@@ -1,0 +1,320 @@
+<html>
+  <head>
+        <title>Rover Command Center</title>
+        <script src="socket.io/socket.io.js"></script>
+        <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+        <div id="container">
+        <img src="http://via.placeholder.com/853x480"></a>
+        <canvas id="crosshairCanvas" width="30" height="30"></canvas>
+        <span id="compassHeadingArrow">^</span>
+        <span id="panAngleDisplay">pan angle</span>
+        <span id="tiltAngleDisplay">tilt angle</span>
+        <span id="compassDisplay">360</span>
+        
+        <canvas id="cameraHeadingDisplayCanvas" width="90" height="60" style="border:2px solid #FFFFFF;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+		<canvas id="cameraAxisCanvas" width="90" height="60" style="border:2px solid #FFFFFF;"></canvas>
+
+
+        <div id="hullControlButtons" style="text-align:center;">
+  <button onmousedown="moveup()" onmouseup="clearmove()" ontouchstart="moveup()">W</button><br><br2>
+  <button onmousedown="moveleft()" onmouseup="clearmove()" ontouchstart="moveleft()">A</button>
+  <button onmousedown="movedown()" onmouseup="clearmove()" ontouchstart="movedown()">S</button>
+  <button onmousedown="moveright()" onmouseup="clearmove()" ontouchstart="moveright()">D</button>
+</div>
+
+<div id="pantiltControlButtons" style="text-align:center;">
+  <button onmousedown="tiltup()" onmouseup="clearmove()" ontouchstart="moveup()">⇧</button><br><br2>
+  <button onmousedown="panleft()" onmouseup="clearmove()" ontouchstart="moveleft()">⇦</button>
+  <button onmousedown="tiltdown()" onmouseup="clearmove()" ontouchstart="movedown()">⇩</button>
+  <button onmousedown="panright()" onmouseup="clearmove()" ontouchstart="moveright()">⇨</button>
+</div>
+</div>
+        <br>
+        Current control code or debugging:
+        <br>
+        Hull:
+        <span id="hullText">Nothing</span>
+        <br>
+        Pan:
+        <span id="panText">Nothing</span>
+        Tilt:
+        <span id="tiltText">Nothing</span>
+        <br>
+        <p id="demo"></p>
+        
+        <script>
+        var crosshairCanvas = document.getElementById("crosshairCanvas");
+        var crosshair = crosshairCanvas.getContext("2d");
+        crosshair.beginPath();
+        crosshair.shadowBlur=1;
+        crosshair.shadowColor="#caffb2";
+		crosshair.moveTo(0,15);
+        crosshair.lineTo(10,15);
+        crosshair.moveTo(20,15);
+        crosshair.lineTo(30,15);
+        crosshair.moveTo(15,0);
+        crosshair.lineTo(15,10);
+        crosshair.moveTo(15,20);
+        crosshair.lineTo(15,30);
+        crosshair.strokeStyle="#FFFFFF";
+		crosshair.stroke();
+        
+        var cameraAxisCanvas = document.getElementById("cameraAxisCanvas");
+		var axisLines = cameraAxisCanvas.getContext("2d");
+        axisLines.beginPath();
+        axisLines.shadowBlur=1;
+		axisLines.shadowColor="#caffb2";
+        axisLines.moveTo(0,45);
+        axisLines.lineTo(90,45);
+        axisLines.moveTo(45,0);
+        axisLines.lineTo(45,120);
+        axisLines.lineWidth=1;
+        axisLines.strokeStyle="#FFFFFF";
+        axisLines.stroke();
+        
+        var cameraHeadingCanvas = document.getElementById("cameraHeadingDisplayCanvas");
+        var panTiltPointer = cameraHeadingCanvas.getContext("2d");
+        var panAngleValue = 90;
+        var tiltAngleValue = 90;
+        var prevPanAngleValue = 90;
+        var prevTiltAngleValue = 90;
+       
+
+          //neccessary variables
+          var keyW = false;
+          var keyA = false;
+          var keyS = false;
+          var keyD = false;
+          
+          var keyUp = false;
+          var keyDown = false;
+          var keyLeft = false;
+          var keyRight = false;
+          
+          var mouseUp = false;
+          var mouseDown = false;
+          var mouseLeft = false;
+          var mouseRight = false;
+          
+          //event listener
+          window.addEventListener("keydown", onKeyDown, false);
+          window.addEventListener("keyup", onKeyUp, false);
+          
+          function moveup() {
+			keyW = true;
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+          
+          function movedown() {
+          	keyS = true;
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+          function moveleft() {
+          	keyA = true;
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+          function moveright() {
+          	keyD = true;
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+          
+          function tiltup() {
+          	keyUp = true;
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+          function tiltdown() {
+          	keyDown = true;
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+          function panleft() {
+          	keyLeft = true;
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+          function panright() {
+          	keyRight = true;
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+          
+		function clearmove() {
+			keyW = false;
+			keyA = false;
+			keyS = false;
+			keyD = false;
+            keyUp = false;
+			keyDown = false;
+			keyLeft = false;
+			keyRight = false;
+          
+            showValue(hullControl(), panControl(), tiltControl());
+		}
+
+          function onKeyDown(event) {
+            var keyCode = event.keyCode;
+            console.log("Key pressed");
+            switch (keyCode) {
+              case 68: //d
+                keyD = true;
+                break;
+              case 83: //s
+                keyS = true;
+                break;
+              case 65: //a
+                keyA = true;
+                break;
+              case 87: //w
+                keyW = true;
+                break;
+              case 38: 
+                keyUp = true;
+                break;
+              case 40: 
+                keyDown = true;
+                break;
+              case 37: 
+                keyLeft = true;
+                break;
+              case 39:
+                keyRight = true;
+                break;
+            }
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+
+          function onKeyUp(event) {
+            var keyCode = event.keyCode;
+            switch (keyCode) {
+              case 68: //d
+                keyD = false;
+                break;
+              case 83: //s
+                keyS = false;
+                break;
+              case 65: //a
+                keyA = false;
+                break;
+              case 87: //w
+                keyW = false;
+                break;
+              case 38: 
+                keyUp = false;
+                break;
+              case 40: 
+                keyDown = false;
+                break;
+              case 37: 
+                keyLeft = false;
+                break;
+              case 39:
+                keyRight = false;
+                break;
+            }
+            showValue(hullControl(), panControl(), tiltControl());
+          }
+
+          //control function to send to Arduino
+          function hullControl() {
+          	var output = 0;
+          	if(keyW && !keyS && !keyA && !keyD){
+            	output = 1;
+            }
+            else if(keyW && !keyS && keyA && !keyD){
+            	output = 2;
+            }
+            else if(keyW && !keyS && !keyA && keyD){
+            	output = 3;
+            }
+            else if(!keyW && keyS && !keyA && !keyD){
+            	output = 4;
+            }
+            else if(!keyW && keyS && keyA && !keyD){
+            	output = 5;
+            }
+            else if(!keyW && keyS && !keyA && keyD){
+            	output = 6;
+            }
+            else if(!keyW && !keyS && keyA && !keyD){
+            	output = 7;
+            }
+            else if(!keyW && !keyS && !keyA && keyD){
+            	output = 8;
+            }
+            else{
+            	output = 0;
+            }
+            return output;
+          }
+          
+          function panControl() {
+          	var output = 0;
+			if(keyLeft || mouseLeft){
+            	output = 1;
+                mouseLeft = false;
+            }
+            else if(keyRight || mouseRight){
+            	output = 2;
+                mouseRight = false;
+            }
+            else{
+            	output = 0;
+            }
+            return output;
+          }
+          function tiltControl() {
+          	var output = 0;
+          	if(keyUp || mouseUp){
+            	output = 1;
+            }
+            else if(keyDown || mouseDown){
+            	output = 2;
+            }
+            else{
+            	output = 0;
+            }
+            return output;
+          }
+          
+          var socket = io.connect();
+
+          socket.on('compassHeading', function (data) {
+              document.getElementById("compassDisplay").innerHTML=data.value;
+          });
+
+          socket.on('panAngle', function (data) {
+              document.getElementById("panAngleDisplay").innerHTML=data.value;
+              panAngleValue = data.value;
+              requestAnimationFrame(updateCameraHeadingCanvas);
+          });
+
+          socket.on('tiltAngle', function (data) {
+              document.getElementById("tiltAngleDisplay").innerHTML=data.value;
+              tiltAngleValue = data.value;
+              requestAnimationFrame(updateCameraHeadingCanvas);
+          });
+               
+          function showValue(hullValue, panValue, tiltValue){
+          	document.getElementById("hullText").innerHTML=hullValue
+            document.getElementById("panText").innerHTML=panValue
+            document.getElementById("tiltText").innerHTML=tiltValue
+          	socket.emit('hullControl', { value: hullValue });
+          	socket.emit('panControl', { value: panValue });
+            socket.emit('tiltControl', { value: tiltValue });
+          }
+          
+          
+          var updateCameraHeadingCanvas = function() {
+          	panTiltPointer.clearRect(0, 0, cameraHeadingCanvas.width, cameraHeadingCanvas.height);
+          	panTiltPointer.beginPath();
+          	panTiltPointer.shadowBlur=1;
+		panTiltPointershadowColor="#caffb2";
+            panTiltPointer.rect(90 - panAngleValue/2 - 8 , tiltAngleValue/2 -4.5 ,16,9);
+            panTiltPointer.strokeStyle="#FFFFFF";
+            panTiltPointer.stroke();
+             panTiltPointer.closePath();
+          }
+          
+        </script>
+  </body>
