@@ -2,18 +2,154 @@
   <head>
         <title>Rover Command Client</title>
         <script src="socket.io/socket.io.js"></script>
-        <link rel="stylesheet" href="style.css">
   </head>
-  <body>
+  <style>
+  	br2 {
+           display: block;
+           margin: 5px;
+        }
+        
+        body {
+    		background-color: #f7f7f7;
+		}
+        
+        #container {
+        	width: 853px;
+            height: 480px;
+            background-color: black;
+            position: relative;
+		}
+
+        #hullControlButtons {
+        	position: absolute;
+    		bottom : 5px;
+    		left : 5px;
+        }
+        
+        #pantiltControlButtons {
+        	position: absolute;
+    		bottom : 5px;
+    		right : 5px;
+        }
+        
+        #panAngleDisplay {
+        	position: absolute;
+    		bottom : 5px;
+    		left : 470px;
+            color:  #fff;
+            text-shadow: 0 0 3px #caffb2;
+        }
+        
+        #cameraHeadingDisplayCanvas {
+        	position: absolute;
+    		bottom : 10px;
+    		left : 372px;
+            color:  #ffffff;
+            box-shadow: 0 0 3px #caffb2;
+        }
+        
+        #cameraAxisCanvas {
+        	position: absolute;
+            bottom : 10px;
+            left : 372px;
+            color:  #ffffff;
+        }
+        
+        #crosshairCanvas {
+        	position: absolute;
+            bottom : 225px;
+            left : 401.5px;
+            color:  #ffffff;
+        }
+        
+        #tiltAngleDisplay {
+        	position: absolute;
+    		bottom : 240px;
+    		right : 100px;
+            color:  #fff;
+            text-shadow: 0 0 3px #caffb2;
+        }
+        
+        #compassDisplay {
+        	position: absolute;
+    		top : 5px;
+    		left : 402px;
+            color:  #fff;
+            text-shadow: 0 0 3px #caffb2;
+            text-align: center;
+        }
+        
+        #compassHeadingArrow {
+        	position: absolute;
+    		top : 22px;
+    		left : 410px;
+            color:  #fff;
+            text-shadow: 0 0 3px #caffb2;
+        }
+        
+        #compassHeading {
+        	position: absolute;
+    		top : 32px;
+    		left : 412px;
+            color:  #fff;
+            text-shadow: 0 0 3px #caffb2;
+        }
+        
+        #cameraStream {
+        	position: absolute;
+    		top : 0px;
+    		left : 0px;
+        }
+
+        button {	    
+          background-color: Transparent;
+          background-repeat:no-repeat;
+          cursor:pointer;
+          overflow: hidden;
+          outline:none;
+          box-shadow: 0 0 3px #caffb2;
+          height:  38px;
+          line-height:  40px;
+          border:  2px solid white;
+          display:  inline-block;
+          float:  none;
+          text-align:  center;
+          width:  38px;
+          padding:  0px!important;
+          font-size:  14px;
+          color:  #fff;
+          text-shadow: 0 0 3px #caffb2;
+ }
+
+          button:hover  {
+               color:  #fff;
+               background:  rgba(255, 255, 255, 0.2);
+ }
+  </style>
+   <body>
 
         <div id="container">
-		<img src="http://via.placeholder.com/853x480"></a>
+        <canvas id="cameraStream" width="853" height="480"></canvas>
+        <script>
+		var socket = io();
+		var ctx = document.getElementById('cameraStream').getContext('2d');
+		console.log("var ctx defined");
+		socket.on('image', function(data) {
+	  		if (data.image) {
+				console.log("data.image is true");
+	    			var img = new Image();
+	    			img.src = 'data:image/jpeg;base64,' + data.buffer;
+				console.log("hello world");
+    				ctx.drawImage(img, 0, 0);
+		  }
+		});
+
+	</script>
 		<canvas id="crosshairCanvas" width="30" height="30"></canvas>
 		<span id="compassHeadingArrow">^</span>
 		<span id="panAngleDisplay">pan angle</span>
 		<span id="tiltAngleDisplay">tilt angle</span>
 		<span id="compassDisplay">360</span>
-
 		<canvas id="cameraHeadingDisplayCanvas" width="90" height="60" style="border:2px solid #FFFFFF;">Your browser does not support the HTML5 canvas tag.</canvas>
 		<canvas id="cameraAxisCanvas" width="90" height="60" style="border:2px solid #FFFFFF;"></canvas>
 
@@ -88,7 +224,6 @@
 		var keyA = false;
 		var keyS = false;
 		var keyD = false;
-
 		var keyUp = false;
 		var keyDown = false;
 		var keyLeft = false;
@@ -149,7 +284,6 @@
 			keyRight = false;
             	showValue(hullControl(), panControl(), tiltControl());
 		}
-
           	function onKeyDown(event) {
             		var keyCode = event.keyCode;
             		console.log("Key pressed");
@@ -181,7 +315,6 @@
 			}
             		showValue(hullControl(), panControl(), tiltControl());
           	}
-
 		 function onKeyUp(event) {
 		 	var keyCode = event.keyCode;
 		 	switch (keyCode) {
@@ -212,7 +345,6 @@
 			}
 			 showValue(hullControl(), panControl(), tiltControl());
 		}
-
 		//control function to send to Arduino
 		function hullControl() {
 			var output = 0;
@@ -274,11 +406,9 @@
 		}
           
           	var socket = io.connect();
-
 		socket.on('compassHeading', function (data) {
 			document.getElementById("compassDisplay").innerHTML=data.value;
 		});
-
 		socket.on('panAngle', function (data) {
 			document.getElementById("panAngleDisplay").innerHTML=data.value;
 			panAngleValue = data.value;
