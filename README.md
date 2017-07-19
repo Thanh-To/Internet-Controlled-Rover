@@ -79,4 +79,4 @@ and look for 'inet addr' under 'wlan0'
 - [Accessing the Raspberry Pi Camera with OpenCV and Python](http://www.pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/)
 - [socket io, node js, Simple example to send image/files from server to client](https://stackoverflow.com/questions/26331787/socket-io-node-js-simple-example-to-send-image-files-from-server-to-client)
 - [Adafruit's Triple Axis Accelerometer and Magnetometer (Compass) breakout board](https://learn.adafruit.com/lsm303-accelerometer-slash-compass-breakout)
-- [OpenCV Tutorials)[http://docs.opencv.org/master/d9/df8/tutorial_root.html]
+- [OpenCV Tutorials](http://docs.opencv.org/master/d9/df8/tutorial_root.html)
