@@ -1,20 +1,20 @@
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_LSM303_U.h>
+#include <Servo.h>
 
 /* Assign a unique ID to this sensor at the same time */
 Adafruit_LSM303_Mag_Unified mag = Adafruit_LSM303_Mag_Unified(12345);
+int compassHeading;
 
-#include <Servo.h>
 
-Servo panServo;  // create servo object to control a servo
-// a maximum of eight servo objects can be created
-Servo tiltServo;  // create servo object to control a servo
-// a maximum of eight servo objects can be created
+Servo panServo;
+Servo tiltServo; 
+int panServoPin = 9;
+int tiltServoPin = 10;
 
 int panPos = 90;
 int tiltPos = 90;
-int compassHeading;
 
 //Arduino PWM Speed Control：
 int Eright = 5;
@@ -22,8 +22,9 @@ int Mright = 4;
 int Eleft = 6;
 int Mleft = 7;
 
+//Interval at which data is transmitted to Raspberry Pi in ms
 unsigned long previousMillis = 0; 
-const long interval = 1000;
+const long interval = 100;
 
 void setup() {
   Serial.begin(9600);
@@ -35,8 +36,8 @@ void setup() {
 
   pinMode(Mright, OUTPUT);
   pinMode(Mleft, OUTPUT);
-  panServo.attach(9);  // attaches the servo on pin 9 to the servo object
-  tiltServo.attach(10);  // attaches the servo on pin 9 to the servo object
+  panServo.attach(panServoPin);  // attaches the servo on pin 9 to the servo object
+  tiltServo.attach(tiltServoPin);  // attaches the servo on pin 10 to the servo object
 }
 
 void loop() {
@@ -45,28 +46,22 @@ void loop() {
 
   unsigned long currentMillis = millis();
 
+  // compass heading and pan-tilt position is only read and transmitted to the Raspberry Pi at every interval
   if (currentMillis - previousMillis >= interval) {
     compassHeading = (int) getCompassHeading();
     String output = "data," + String(compassHeading) + "," + String(panPos) + "," + String(tiltPos) + "," + "0";
     Serial.println(output);
   }
   
+  // Reading and decode commands from Raspberry Pi
   if (Serial.available()){
-/*
-    int input = Serial.read();
-  
-    int hullControlCode = (input%100)%10;
-    int panControlCode = input/100;
-    int tiltControlCode = (input%100)/10;
-*/
-
     String myString = Serial.readStringUntil('\n');
     int commaIndex = myString.indexOf(',');
     int secondCommaIndex = myString.indexOf(',', commaIndex + 1);
     String firstValue = myString.substring(0, commaIndex);
-String secondValue = myString.substring(commaIndex + 1, secondCommaIndex);
-String thirdValue = myString.substring(secondCommaIndex + 1);
-int hullControlCode = firstValue.toInt();
+    String secondValue = myString.substring(commaIndex + 1, secondCommaIndex);
+    String thirdValue = myString.substring(secondCommaIndex + 1);
+    int hullControlCode = firstValue.toInt();
     int panControlCode = secondValue.toInt();
     int tiltControlCode = thirdValue.toInt();
     
@@ -121,6 +116,9 @@ int hullControlCode = firstValue.toInt();
   }
 }
 
+/* The following functions take the speed and control the 2 motor drivers accordingly 
+ */
+
 void Forward(int Speed) {
   digitalWrite(Mright, HIGH);
   digitalWrite(Mleft, HIGH);
@@ -153,13 +151,13 @@ void ReverseLeft(int Speed) {
   digitalWrite(Mright, HIGH);
   digitalWrite(Mleft, HIGH);
   analogWrite(Eright, Speed);
-  analogWrite(Eleft, Speed * 0.5);
+  analogWrite(Eleft, Speed * 0.2);
 }
 
 void ReverseRight(int Speed) {
   digitalWrite(Mright, HIGH);
   digitalWrite(Mleft, HIGH);
-  analogWrite(Eright, Speed * 0.5);
+  analogWrite(Eright, Speed * 0.2);
   analogWrite(Eleft, Speed);
 }
 
@@ -184,6 +182,9 @@ void Stop() {
   analogWrite(Eleft, 0);
 }
 
+/* This function reads data from the Triple Axis Accelerometer and Magnetometer (Compass) breakout board and returns the current compass heading
+ * Codes and instructions by Adafruit from https://learn.adafruit.com/lsm303-accelerometer-slash-compass-breakout/coding
+ */
 float getCompassHeading() {
   sensors_event_t event; 
   mag.getEvent(&event);
