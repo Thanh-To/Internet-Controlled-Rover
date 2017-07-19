@@ -73,7 +73,16 @@ ifconfig
 ```
 and look for 'inet addr' under 'wlan0'
 
+The image below is the interface seen on the client's webpage:
+
 ![GUI Demo](https://raw.githubusercontent.com/ThankyTo/Internet-Controlled-Rover/master/GUI.png)
+
+Use WASD keys to control the direction of the rover chassis itself and arrow keys to control the pan-tilt head.
+The number on top indicates the current compass heading.
+The number on the right indicates the current tilt angle.
+The number at the bottom indicates the current pan angle.
+The small rectangle at the bottom visually indicates the current position on the pan-tilt head in relative to the chassis.
+
 
 ## References
 - [W3Schools HTML, Javascript and Canva tutorials](https://www.w3schools.com/)
