@@ -71,9 +71,9 @@ ifconfig
 and look for 'inet addr' under 'wlan0'
 
 ## References
-[W3Schools HTML and Javascript tutorials](https://www.w3schools.com/)
-[Easy Node.JS + WebSockets LED Controller for Raspberry Pi](http://www.instructables.com/id/Easy-NodeJS-WebSockets-LED-Controller-for-Raspberr/)
-[Accessing the Raspberry Pi Camera with OpenCV and Python] (http://www.pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/)
-[socket io, node js, Simple example to send image/files from server to client](https://stackoverflow.com/questions/26331787/socket-io-node-js-simple-example-to-send-image-files-from-server-to-client)
+-[W3Schools HTML and Javascript tutorials](https://www.w3schools.com/)
+-[Easy Node.JS + WebSockets LED Controller for Raspberry Pi](http://www.instructables.com/id/Easy-NodeJS-WebSockets-LED-Controller-for-Raspberr/)
+-[Accessing the Raspberry Pi Camera with OpenCV and Python](http://www.pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/)
+-[socket io, node js, Simple example to send image/files from server to client](https://stackoverflow.com/questions/26331787/socket-io-node-js-simple-example-to-send-image-files-from-server-to-client)
 
 
