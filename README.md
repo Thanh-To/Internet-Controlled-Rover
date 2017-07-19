@@ -73,6 +73,8 @@ ifconfig
 ```
 and look for 'inet addr' under 'wlan0'
 
+![GUI Demo](https://raw.githubusercontent.com/ThankyTo/Internet-Controlled-Rover/master/GUI.png)
+
 ## References
 - [W3Schools HTML, Javascript and Canva tutorials](https://www.w3schools.com/)
 - [Easy Node.JS + WebSockets LED Controller for Raspberry Pi](http://www.instructables.com/id/Easy-NodeJS-WebSockets-LED-Controller-for-Raspberr/)
