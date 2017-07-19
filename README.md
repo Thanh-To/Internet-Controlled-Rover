@@ -1,7 +1,7 @@
 # Internet Controlled Rover
 
 ## About
-Control your 4WD robotic/rover and pan-tilt camera module through the internet by simply downloading this repository onto your Raspberry Pi and foolow the instruction down below. 
+Control your 4WD robotic/rover and pan-tilt camera module through the internet by simply downloading this repository onto your Raspberry Pi and follow the instruction down below. 
 
 ## Hardware Requirements*
 *The following are the list of components used by this specific project. Equivalent components may or may not work. 
@@ -10,6 +10,8 @@ Control your 4WD robotic/rover and pan-tilt camera module through the internet b
 - SainSmart 4WD Drive Aluminum Mobile Robot Platform (https://www.amazon.ca/SainSmart-Aluminum-Platform-MEGA2560-Duemilanove/dp/B008Q47VKE)
 - Pi Camera
 - 2x2A DC Motor Shield for Arduino (https://www.dfrobot.com/product-69.html)
+- Triple-axis Accelerometer+Magnetometer (Compass) Board - LSM303 (https://www.adafruit.com/product/1120)
+-
 - USB battery bank
 - 6xAA rechargable batteries and battery holder
 - 
@@ -21,6 +23,7 @@ Control your 4WD robotic/rover and pan-tilt camera module through the internet b
 
 ## Assembly*
 *Specific hardware assembly depends on the components you have sourced. In order for the project to work, wire the components to the according pins on the Arduino code.
+
 [To be Updated]
 
 ## Installation
@@ -47,8 +50,30 @@ npm install socket.io
 npm install serialport
 ```
 ### 4. Installing OpenCV
-follow the instructions from http://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html to install OpenCV onto your Raspberry Pi
+Follow the instructions from http://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html to install OpenCV onto your Raspberry Pi
 
-## Set up
+### 5. Enable your Pi Camera
+Follow the instructions from https://www.raspberrypi.org/learning/getting-started-with-picamera/ to enable and test your Pi Camera
 
-## Usage
+## Startup 
+```
+cd Internet-Controlled-Rover
+python PiCamera.py
+node server.js
+```
+
+## Usage 
+From a different computer or mobile devices on the same local network, go to http://[RaspberryPi's IP Address]:8000 
+If you don't know your Raspbery Pi's IP address, on the Pi's terminal, input:
+```
+ifconfig
+```
+and look for 'inet addr' under 'wlan0'
+
+## References
+[W3Schools HTML and Javascript tutorials](https://www.w3schools.com/)
+[Easy Node.JS + WebSockets LED Controller for Raspberry Pi](http://www.instructables.com/id/Easy-NodeJS-WebSockets-LED-Controller-for-Raspberr/)
+[Accessing the Raspberry Pi Camera with OpenCV and Python] (http://www.pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/)
+[socket io, node js, Simple example to send image/files from server to client](https://stackoverflow.com/questions/26331787/socket-io-node-js-simple-example-to-send-image-files-from-server-to-client)
+
+
