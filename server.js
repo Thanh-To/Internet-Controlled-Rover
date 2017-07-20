@@ -53,3 +53,4 @@ function writeToSerial(){
 	var output = hullCode + "," + panCode + "," + tiltCode + "\n" ;
 	port.write(output);
 }
+
