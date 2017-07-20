@@ -32,7 +32,6 @@ io.sockets.on('connection', function (socket) {
 	console.log("connected");
 	socket.on('hullControl', function (data) {
 		hullCode = data.value;
-		console.log("Hull code:" + hullCode);
 		writeToSerial();
 
 	});
@@ -45,8 +44,17 @@ io.sockets.on('connection', function (socket) {
 		tiltCode = data.value;
 		writeToSerial();
 
-	});	
+	});
+	
+	socket.on('my other event', function (data) {
+		console.log("start streaming");
+    	});	
 });
+
+setInterval(function() {
+      			sendImage();
+		}, 1000/24);
+		
 console.log("running");
 
 function writeToSerial(){
@@ -54,3 +62,9 @@ function writeToSerial(){
 	port.write(output);
 }
 
+function sendImage() {
+	fs.readFile(__dirname + '/frame.jpg', function(err, buf){
+    			io.sockets.emit('image', { image: true, buffer: buf.toString('base64') });
+    			console.log("Image file sent...");
+	});
+}
