@@ -10,6 +10,7 @@ The Internet Controlled Rover project uses Node.js and Socket.io to send command
 This project is my own implementation from a rejected idea for our Second Year Computer Engineering Project. It has allowed me to learn so much more along the way. I will continue to update and refine it as time go on.
 
 Please click the image below to see the rover in action
+
 [![Internet Controlled Rover DEMO](https://img.youtube.com/vi/1l3UMLTrKjA/0.jpg)](https://www.youtube.com/watch?v=1l3UMLTrKjA)
 
 ## Hardware Requirements*
