@@ -5,9 +5,11 @@
 ## About
 Control your 4WD robotic/rover and pan-tilt camera module through the internet by simply downloading this repository onto your Raspberry Pi and follow the instruction down below. 
 
-The Internet Controlled Rover project uses Node.js and Socket.io to send commands and data betwee client and server in the same local network. The client uses HTML5 with embeded Javascript and Canvas. OpenCV saves images from the Pi Camera then Socket.io serves them on an HTML canvas to simulate a live stream. The framerate and resolution of the stream can be change but it will affect the latency, depending on the network. 
+The Internet Controlled Rover project uses Node.js and Socket.io to send commands and data between client and server in the same local network. The client uses HTML5 with embeded Javascript and Canvas. OpenCV saves images from the Pi Camera then Socket.io serves them on an HTML canvas to simulate a live stream. The framerate and resolution of the stream can be change but it will affect the latency, depending on the network. 
 
 This project is my own implementation from a rejected idea for our Second Year Computer Engineering Project. It has allowed me to learn so much more along the way. I will continue to update and refine it as time go on.
+
+[![Internet Controlled Rover DEMO](https://img.youtube.com/vi/1l3UMLTrKjA/0.jpg)](https://www.youtube.com/watch?v=1l3UMLTrKjA)
 
 ## Hardware Requirements*
 *The following are the list of components used by this specific project. Equivalent components may or may not work. 
